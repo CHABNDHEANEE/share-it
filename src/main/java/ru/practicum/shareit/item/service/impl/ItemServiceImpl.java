@@ -17,10 +17,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final Map<Long, Item> items;
+    private long curId = 1;
 
     @Override
     public ItemDto addItem(ItemDto item, Long userId) {
-        items.put(item.getId(), ItemMapper.toItem(item));
+        items.put(curId++, ItemMapper.toItem(item));
         return item;
     }
 
