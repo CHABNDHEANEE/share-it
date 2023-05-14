@@ -8,6 +8,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.mapper.UserMapper;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 import java.util.Map;
@@ -17,11 +19,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final Map<Long, Item> items;
+    private final UserService userService;
     private long curId = 1;
 
     @Override
     public ItemDto addItem(ItemDto item, Long userId) {
-        items.put(curId++, ItemMapper.toItem(item));
+        item.setOwner(UserMapper.toUser(userService.getUser(userId)));
+        item.setId(curId++);
+        items.put(item.getId(), ItemMapper.toItem(item));
         return item;
     }
 
@@ -39,24 +44,26 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void updateItem(Long id, ItemDto item, Long userId) {
+    public ItemDto updateItem(Long id, ItemDto item, Long userId) {
         checkItemOnUpdate(id, item, userId);
 
         Item itemToUpdate = items.get(id);
 
         itemToUpdate.setName(item.getName() == null ? itemToUpdate.getName() : item.getName());
-        itemToUpdate.setDescription(item.getDescription() == null ? itemToUpdate.getDescription() : item.getName());
+        itemToUpdate.setDescription(item.getDescription() == null ? itemToUpdate.getDescription() : item.getDescription());
         itemToUpdate.setAvailable(item.getAvailable() == null ? itemToUpdate.isAvailable() : item.getAvailable());
 
         items.put(id, itemToUpdate);
+        return ItemMapper.toItemDto(itemToUpdate);
     }
 
     @Override
     public List<ItemDto> searchItem(String text) {
         return items.values().stream()
-                .filter(o -> (o.getDescription().contains(text) ||
-                        o.getName().contains(text)) &&
-                        o.isAvailable())
+                .filter(o -> (o.getDescription().matches("(?ui).*?" + text + ".*?") ||
+                        o.getName().matches("(?ui).*?" + text + ".*?")) &&
+                        o.isAvailable() &&
+                        !text.isBlank())
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
@@ -68,10 +75,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void checkItemOnUpdate(Long id, ItemDto item, Long userId) {
-        checkItemOwner(ItemMapper.toItem(item), userId);
-
-        if (item.getId() != id)
-            throw new ObjectUpdateException("Wrong item id");
+        checkItemOwner(items.get(id), userId);
 
         if (item.getOwner() != null || item.getRequest() != null)
             throw new ObjectUpdateException("These fields can't be updated");

@@ -29,6 +29,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(Long id) {
+        if (!users.containsKey(id))
+            throwUserDoesntExists();
         return UserMapper.toUserDto(users.get(id));
     }
 

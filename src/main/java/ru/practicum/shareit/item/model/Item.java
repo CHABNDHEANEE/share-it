@@ -16,8 +16,6 @@ public class Item {
     private String description;
     @NotNull
     private boolean available;
-    @NotNull
     private User owner;
-    @NotNull
     private Long request;
 }
