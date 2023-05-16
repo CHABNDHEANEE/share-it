@@ -63,8 +63,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private void checkUser(Long userId, UserDto user) {
-        if (users.values().stream()
-                .anyMatch(o -> o.getEmail().equals(user.getEmail()) && userId != o.getId()))
+        boolean isUnique = users.values().stream()
+                .anyMatch(o -> o.getEmail().equals(user.getEmail()) && userId != o.getId());
+        if (isUnique)
             throw new ObjectCreationException("User with this email already exists");
     }
 
