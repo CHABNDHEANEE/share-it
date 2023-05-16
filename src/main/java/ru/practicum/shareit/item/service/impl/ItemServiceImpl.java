@@ -60,8 +60,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> searchItem(String text) {
         return items.values().stream()
-                .filter(o -> (o.getDescription().matches("(?ui).*?" + text + ".*?") ||
-                        o.getName().matches("(?ui).*?" + text + ".*?")) &&
+                .filter(o -> (o.getDescription().toLowerCase().contains(text.toLowerCase()) ||
+                        o.getName().toLowerCase().contains(text.toLowerCase())) &&
                         o.isAvailable() &&
                         !text.isBlank())
                 .map(ItemMapper::toItemDto)
