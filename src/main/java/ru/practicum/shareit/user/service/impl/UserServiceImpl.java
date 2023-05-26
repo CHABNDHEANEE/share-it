@@ -7,66 +7,67 @@ import ru.practicum.shareit.exception.ObjectExistenceException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final Map<Long, User> users;
+    private final UserRepository repository;
     private long curId = 1;
 
     @Override
     public UserDto addUser(UserDto user) {
         checkUser(curId, user);
         user.setId(curId);
-        users.put(curId, UserMapper.toUser(user));
-        return getUser(curId++);
+        return UserMapper.toUserDto(repository.save(UserMapper.toUser(user)));
     }
 
     @Override
     public UserDto getUser(Long id) {
-        if (!users.containsKey(id))
+        Optional<User> user = repository.findById(id);
+        if (user.isEmpty())
             throwUserDoesntExists();
-        return UserMapper.toUserDto(users.get(id));
+        return UserMapper.toUserDto(user.get());
     }
 
     @Override
     public UserDto updateUser(Long userId, UserDto user) {
-        if (!users.containsKey(userId))
+        Optional<User> userToUpdateOpt = repository.findById(userId);
+        if (userToUpdateOpt.isEmpty())
             throwUserDoesntExists();
         checkUser(userId, user);
 
-        User userToUpdate = users.get(userId);
+        User userToUpdate = userToUpdateOpt.get();
 
         userToUpdate.setEmail(user.getEmail() == null ? userToUpdate.getEmail() : user.getEmail());
         userToUpdate.setName(user.getName() == null ? userToUpdate.getName() : user.getName());
 
-        users.put(userId, userToUpdate);
-        return getUser(userId);
+        return UserMapper.toUserDto(repository.save(userToUpdate));
     }
 
     @Override
     public void deleteUser(Long id) {
-        if (users.remove(id) == null)
-            throwUserDoesntExists();
+        repository.deleteById(id);
     }
 
     @Override
     public List<UserDto> getAll() {
-        return users.values().stream()
+        return repository.findAll().stream()
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
     }
 
     private void checkUser(Long userId, UserDto user) {
-        boolean isUnique = users.values().stream()
-                .anyMatch(o -> o.getEmail().equals(user.getEmail()) && userId != o.getId());
-        if (isUnique)
+        Optional<User> foundedUser = repository.findByEmail(user.getEmail());
+        if (foundedUser.isEmpty() || !foundedUser.get().getEmail().equals(user.getEmail()))
             throw new ObjectCreationException("User with this email already exists");
+
     }
 
     private void throwUserDoesntExists() {
