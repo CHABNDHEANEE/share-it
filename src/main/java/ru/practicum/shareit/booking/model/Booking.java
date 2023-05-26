@@ -18,7 +18,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Item item;
 
     @Column(name = "start_date")
@@ -27,7 +27,7 @@ public class Booking {
     @Column(name = "end_date")
     private Date end;
 
-    @OneToOne
+    @ManyToOne
     private User booker;
 
     @Enumerated(EnumType.STRING)
