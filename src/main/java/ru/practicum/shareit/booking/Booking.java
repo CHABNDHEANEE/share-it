@@ -1,7 +1,8 @@
-package ru.practicum.shareit.booking.model;
+package ru.practicum.shareit.booking;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
