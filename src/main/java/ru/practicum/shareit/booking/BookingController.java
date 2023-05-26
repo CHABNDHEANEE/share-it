@@ -14,8 +14,8 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public void add(Booking booking) {
-        service.add(booking);
+    public void add(@RequestBody Booking booking, @RequestHeader(value = USER_ID_HEADER) long userId) {
+        service.add(booking, userId);
     }
 
     @PatchMapping("/{bookingId}")
@@ -31,13 +31,13 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<Booking> getAllByUser(@RequestParam(defaultValue = "ALL") BookingStatus state,
+    public List<Booking> getAllByUser(@RequestParam(defaultValue = "ALL") BookingCondition state,
                                       @RequestHeader(value = USER_ID_HEADER) Long userId) {
         return service.getAllByUser(userId, state);
     }
 
     @GetMapping("/owner")
-    public List<Booking> getBookingsByItems(@RequestParam(defaultValue = "ALL") BookingStatus state,
+    public List<Booking> getBookingsByItems(@RequestParam(defaultValue = "ALL") BookingCondition state,
                                             @RequestHeader(value = USER_ID_HEADER) long userId) {
         return service.getBookingsByItems(userId, state);
     }

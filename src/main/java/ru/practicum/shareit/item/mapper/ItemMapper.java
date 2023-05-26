@@ -16,13 +16,6 @@ public class ItemMapper {
     }
 
     public static Item toItem(ItemDto item) {
-        return Item.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .owner(item.getOwner())
-                .request(item.getRequest())
-                .build();
+        return new Item(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), item.getOwner(), item.getRequest());
     }
 }

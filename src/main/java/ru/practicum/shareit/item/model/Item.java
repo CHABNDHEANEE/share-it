@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @Entity
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class Item {
     @Id
@@ -31,7 +32,6 @@ public class Item {
     private boolean available;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column
     private User owner;
 
     @Column

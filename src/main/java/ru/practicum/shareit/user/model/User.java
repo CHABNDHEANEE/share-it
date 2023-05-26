@@ -7,10 +7,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Data
-@Builder
 @Entity
 @Table(name = "users", schema = "public")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
