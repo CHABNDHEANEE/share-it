@@ -1,17 +1,11 @@
-package ru.practicum.shareit.user.service.impl;
+package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ObjectCreationException;
 import ru.practicum.shareit.exception.ObjectExistenceException;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.mapper.UserMapper;
-import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.repository.UserRepository;
-import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,12 +13,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private long curId = 1;
 
     @Override
     public UserDto addUser(UserDto user) {
-        checkUser(curId, user);
-        user.setId(curId);
+//        checkUser(user);
         return UserMapper.toUserDto(repository.save(UserMapper.toUser(user)));
     }
 
@@ -41,7 +33,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> userToUpdateOpt = repository.findById(userId);
         if (userToUpdateOpt.isEmpty())
             throwUserDoesntExists();
-        checkUser(userId, user);
+        checkUser(user);
 
         User userToUpdate = userToUpdateOpt.get();
 
@@ -63,9 +55,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private void checkUser(Long userId, UserDto user) {
+    private void checkUser(UserDto user) {
         Optional<User> foundedUser = repository.findByEmail(user.getEmail());
-        if (foundedUser.isEmpty() || !foundedUser.get().getEmail().equals(user.getEmail()))
+        if (foundedUser.isPresent())
             throw new ObjectCreationException("User with this email already exists");
 
     }

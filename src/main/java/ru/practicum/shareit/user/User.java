@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user.model;
+package ru.practicum.shareit.user;
 
 import lombok.*;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-@Table(name = "users", schema = "public")
+@Table(name = "users", schema = "public", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class User {
