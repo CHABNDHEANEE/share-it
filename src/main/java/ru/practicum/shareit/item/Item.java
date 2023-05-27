@@ -36,8 +36,8 @@ public class Item {
     private Long request;
 
     @Transient
-    private Booking lastBooking;
+    private BookingDto lastBooking;
 
     @Transient
-    private Booking nextBooking;
+    private BookingDto nextBooking;
 }

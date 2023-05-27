@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Null;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -16,13 +17,21 @@ public class ItemBookingServiceImpl implements ItemBookingService{
     private final BookingRepository repository;
 
     @Override
-    public Optional<Booking> getLastBooking(long itemId) {
-        return repository.findFirstByItemIdAndEndBeforeOrderByEndDesc(itemId, LocalDateTime.now());
+    public BookingDto getLastBooking(long itemId) {
+        try {
+            return BookingMapper.bookingToDto(repository.findFirstByItemIdAndEndBeforeOrderByEndDesc(itemId, LocalDateTime.now()));
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
-    public Optional<Booking> getNextBooking(long itemId) {
-        return repository.findFirstByItemIdAndStatus(itemId, BookingStatus.APPROVED);
+    public BookingDto getNextBooking(long itemId) {
+        try {
+            return BookingMapper.bookingToDto(repository.findFirstByItemIdAndStatus(itemId, BookingStatus.APPROVED));
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override
