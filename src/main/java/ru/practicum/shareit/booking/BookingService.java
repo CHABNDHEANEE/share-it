@@ -6,7 +6,7 @@ import ru.practicum.shareit.booking.BookingStatus;
 import java.util.List;
 
 interface BookingService {
-    void add(BookingDto booking, long userId);
+    BookingDto add(BookingDto booking, long userId);
 
     BookingDto approve(long bookingId, boolean status, long userId);
 

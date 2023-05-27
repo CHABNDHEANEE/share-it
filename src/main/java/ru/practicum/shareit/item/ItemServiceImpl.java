@@ -19,12 +19,10 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     private final ItemBookingService bookingService;
     private final ItemRepository repository;
-    private long curId = 1;
 
     @Override
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
-        item.setId(curId++);
         return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
     }
 

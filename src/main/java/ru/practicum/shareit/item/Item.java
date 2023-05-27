@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@Table(name = "items", schema = "public")
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Item {
@@ -21,21 +22,17 @@ public class Item {
     private long id;
 
     @NotNull
-    @Column
     private String name;
 
     @NotNull
-    @Column
     private String description;
 
     @NotNull
-    @Column
     private boolean available;
 
     @ManyToOne
     private User owner;
 
-    @Column
     private Long request;
 
     @Transient

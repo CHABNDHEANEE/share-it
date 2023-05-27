@@ -18,7 +18,16 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleEntityNotFOundException(final EntityNotFoundException e) {
+    public Map<String, String> handleEntityNotFoundException(final EntityNotFoundException e) {
+        return Map.of("", e.getMessage());
+    }
+
+    @ExceptionHandler({
+            ObjectAvailabilityException.class,
+            ObjectCreationException.class
+    })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleObjectAvailabilityException(final Exception e) {
         return Map.of("", e.getMessage());
     }
 

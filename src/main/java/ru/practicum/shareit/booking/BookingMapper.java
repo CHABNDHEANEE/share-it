@@ -1,15 +1,19 @@
 package ru.practicum.shareit.booking;
 
 import ru.practicum.shareit.exception.ObjectExistenceException;
+import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.user.User;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class BookingMapper {
     public static BookingDto bookingToDto(Booking booking) {
         return BookingDto.builder()
                 .id(booking.getId())
-                .item(booking.getItem())
+                .itemId(booking.getItem().getId())
                 .start(booking.getStart())
                 .end(booking.getEnd())
                 .booker(booking.getBooker())
@@ -17,27 +21,29 @@ public class BookingMapper {
                 .build();
     }
 
-    public static Booking bookingFromDto(BookingDto booking) {
+    public static Booking bookingFromDto(BookingDto booking, Item item, User booker) {
         return Booking.builder()
                 .id(booking.getId())
-                .item(booking.getItem())
+                .item(item)
                 .start(booking.getStart())
                 .end(booking.getEnd())
-                .booker(booking.getBooker())
+                .booker(booker)
                 .status(toCondition(booking.getStatus(), booking.getStart(), booking.getEnd()))
                 .build();
     }
 
-    private static BookingCondition toCondition(BookingStatus status, Date start, Date end) {
+    private static BookingCondition toCondition(BookingStatus status, LocalDateTime start, LocalDateTime end) {
+        if (status == null)
+            return BookingCondition.WAITING;
         switch (status) {
             case WAITING:
                 return BookingCondition.WAITING;
             case REJECTED:
                 return BookingCondition.REJECTED;
             case APPROVED:
-                if (start.after(Date.from(Instant.now())) && end.before(Date.from(Instant.now())))
+                if (start.isAfter(LocalDateTime.from(Instant.now())) && end.isBefore(LocalDateTime.from(Instant.now())))
                     return BookingCondition.CURRENT;
-                else if (end.before(Date.from(Instant.now())))
+                else if (end.isBefore(LocalDateTime.from(Instant.now())))
                     return BookingCondition.PAST;
                 else
                     return BookingCondition.FUTURE;
@@ -47,6 +53,8 @@ public class BookingMapper {
     }
 
     private static BookingStatus toStatus(BookingCondition status) {
+        if (status == null)
+            return BookingStatus.WAITING;
         switch (status) {
             case FUTURE:
             case CURRENT:
