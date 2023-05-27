@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -21,5 +22,10 @@ public class ItemBookingServiceImpl implements ItemBookingService{
     @Override
     public Booking getNextBooking(long itemId) {
         return repository.findDistinctFirstByItemIdOrderByStart(itemId);
+    }
+
+    @Override
+    public boolean checkBookingCompleted(long itemId, long userId) {
+        return repository.findBookingByEndBeforeAndItemIdAndBookerId(LocalDateTime.now(), itemId, userId).isPresent();
     }
 }

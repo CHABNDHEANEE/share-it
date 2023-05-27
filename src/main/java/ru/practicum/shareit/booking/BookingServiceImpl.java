@@ -74,6 +74,7 @@ public class BookingServiceImpl implements BookingService {
 
         return repository.findAllByItemOwnerId(user.getId()).stream()
                 .filter(o -> filterByCondition(o, status))
+                .sorted(Comparator.comparing(Booking::getStart).reversed())
                 .map(BookingMapper::bookingToDto)
                 .collect(Collectors.toList());
     }
@@ -88,7 +89,8 @@ public class BookingServiceImpl implements BookingService {
                 return booking.getStart().isBefore(LocalDateTime.now()) &&
                         booking.getEnd().isAfter(LocalDateTime.now());
             case FUTURE:
-                return booking.getStart().isAfter(LocalDateTime.now());
+                return booking.getStart().isAfter(LocalDateTime.now()) ||
+                        booking.getStart().equals(LocalDateTime.now());
             case WAITING:
                 return booking.getStatus().equals(BookingStatus.WAITING);
             default:

@@ -46,4 +46,17 @@ create table if not exists requests
             references users,
     creation_date date          not null
 );
+create table if not exists comments
+(
+    id        bigserial
+        constraint comments_pk
+            primary key,
+    item_id   bigint        not null
+        constraint comments_items_id_fk
+            references items,
+    user_id bigint        not null
+        constraint comments_users_id_fk
+            references users,
+    text      varchar(2000) not null
+);
 

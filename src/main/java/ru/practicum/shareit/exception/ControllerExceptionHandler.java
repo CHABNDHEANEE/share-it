@@ -40,7 +40,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ObjectAccessException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleObjectAccessException(final ObjectAccessException e) {
         return Map.of("", e.getMessage());
     }
