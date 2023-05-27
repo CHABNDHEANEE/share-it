@@ -32,7 +32,7 @@ public class Item {
     @Column
     private boolean available;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User owner;
 
     @Column

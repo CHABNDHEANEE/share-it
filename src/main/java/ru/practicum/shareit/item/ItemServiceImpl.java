@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.ItemBookingService;
 import ru.practicum.shareit.exception.ObjectAccessException;
 import ru.practicum.shareit.exception.ObjectUpdateException;
@@ -44,6 +45,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto updateItem(Long id, ItemDto item, Long userId) {
         Item itemToUpdate = repository.findById(id).get();
 
@@ -62,8 +64,9 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank())
             return new ArrayList<>();
 
-        return repository.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCaseAndAvailableTrue(text, text)
+        return repository.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(text, text)
                 .stream()
+                .filter(Item::isAvailable)
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
