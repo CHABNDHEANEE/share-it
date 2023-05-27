@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.item.Item;
@@ -11,8 +13,10 @@ import java.util.Date;
 
 @Data
 @Entity
+@Builder
 @Table(name = "bookings", schema = "public")
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +35,5 @@ public class Booking {
     private User booker;
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus status = BookingStatus.WAITING;
+    private BookingCondition status = BookingCondition.WAITING;
 }

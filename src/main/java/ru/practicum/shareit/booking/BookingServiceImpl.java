@@ -21,39 +21,42 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
-    public void add(Booking booking, long userId) {
+    public void add(BookingDto booking, long userId) {
         booking.setBooker(getUserById(userId));
-        repository.save(booking);
+        repository.save(BookingMapper.bookingFromDto(booking));
     }
 
     @Override
-    public Booking approve(long bookingId, boolean status, long userId) {
-        Booking booking = getBookingById(bookingId);
+    public BookingDto approve(long bookingId, boolean status, long userId) {
+        BookingDto booking = BookingMapper.bookingToDto(getBookingById(bookingId));
         if (booking.getItem().getOwner().getId() != userId)
             throw new ObjectAccessException("You don't have access to this booking");
         booking.setStatus(status ? BookingStatus.APPROVED : BookingStatus.REJECTED);
-        return repository.save(booking);
+        return BookingMapper.bookingToDto(repository.save(BookingMapper.bookingFromDto(booking)));
     }
 
     @Override
-    public Booking get(long bookingId, long userId) {
+    public BookingDto get(long bookingId, long userId) {
         Booking booking = getBookingById(bookingId);
         if (booking.getItem().getOwner().getId() != userId || booking.getBooker().getId() != userId)
             throw new ObjectAccessException("You don't have access to this booking");
-        return booking;
+        return BookingMapper.bookingToDto(booking);
     }
 
     @Override
-    public List<Booking> getAllByUser(long userId, BookingCondition status) {
-        Stream<Booking> bookingStream = filterStreamByCondition(repository.findAllByBookerId(userId).stream(), status);
-
-        return bookingStream.sorted(Comparator.comparing(Booking::getStart).reversed())
+    public List<BookingDto> getAllByUser(long userId, BookingCondition status) {
+        return repository.findAllByBookerId(userId).stream()
+                .filter(o -> o.getStatus().equals(status))
+                .sorted(Comparator.comparing(Booking::getStart).reversed())
+                .map(BookingMapper::bookingToDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Booking> getBookingsByItems(long userId, BookingCondition status) {
-        return filterStreamByCondition(repository.findAllByItemOwnerId(userId).stream(), status)
+    public List<BookingDto> getBookingsByItems(long userId, BookingCondition status) {
+        return repository.findAllByItemOwnerId(userId).stream()
+                .filter(o -> o.getStatus().equals(status))
+                .map(BookingMapper::bookingToDto)
                 .collect(Collectors.toList());
     }
 
@@ -69,26 +72,5 @@ public class BookingServiceImpl implements BookingService {
         if (userOptional.isEmpty())
             throw new ObjectExistenceException("This user doesn't exists");
         return userOptional.get();
-    }
-
-    private Stream<Booking> filterStreamByCondition(Stream<Booking> stream, BookingCondition cond) {
-        switch (cond) {
-            case PAST:
-                return stream.filter(o -> o.getEnd().toInstant().isBefore(Instant.now()) &&
-                        o.getStatus().equals(BookingStatus.APPROVED));
-            case FUTURE:
-                return stream.filter(o -> o.getStatus().equals(BookingStatus.APPROVED) &&
-                        o.getStart().toInstant().isAfter(Instant.now()));
-            case CURRENT:
-                return stream.filter(o -> o.getStatus().equals(BookingStatus.APPROVED) &&
-                        o.getStart().toInstant().isAfter(Instant.now()) &&
-                        o.getEnd().toInstant().isBefore(Instant.now()));
-            case WAITING:
-                return stream.filter(o -> o.getStatus().equals(BookingStatus.WAITING));
-            case REJECTED:
-                return stream.filter(o -> o.getStatus().equals(BookingStatus.REJECTED));
-            default:
-                return stream;
-        }
     }
 }

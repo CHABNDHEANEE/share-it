@@ -14,30 +14,30 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public void add(@RequestBody Booking booking, @RequestHeader(value = USER_ID_HEADER) long userId) {
+    public void add(@RequestBody BookingDto booking, @RequestHeader(value = USER_ID_HEADER) long userId) {
         service.add(booking, userId);
     }
 
     @PatchMapping("/{bookingId}")
-    public Booking approve(@PathVariable long bookingId,
+    public BookingDto approve(@PathVariable long bookingId,
                            @RequestParam boolean status,
                            @RequestHeader(value = USER_ID_HEADER) long userId) {
         return service.approve(bookingId, status, userId);
     }
 
     @GetMapping("/{bookingId}")
-    public Booking get(long bookingId, @RequestHeader(value = USER_ID_HEADER) long userId) {
+    public BookingDto get(long bookingId, @RequestHeader(value = USER_ID_HEADER) long userId) {
         return service.get(bookingId, userId);
     }
 
     @GetMapping
-    public List<Booking> getAllByUser(@RequestParam(defaultValue = "ALL") BookingCondition state,
+    public List<BookingDto> getAllByUser(@RequestParam(defaultValue = "ALL") BookingCondition state,
                                       @RequestHeader(value = USER_ID_HEADER) Long userId) {
         return service.getAllByUser(userId, state);
     }
 
     @GetMapping("/owner")
-    public List<Booking> getBookingsByItems(@RequestParam(defaultValue = "ALL") BookingCondition state,
+    public List<BookingDto> getBookingsByItems(@RequestParam(defaultValue = "ALL") BookingCondition state,
                                             @RequestHeader(value = USER_ID_HEADER) long userId) {
         return service.getBookingsByItems(userId, state);
     }
