@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
-    private final BookingRepository repository;
+    final BookingRepository repository;
     private final UserRepository userRepository;
 
     @Override

@@ -3,6 +3,8 @@ package ru.practicum.shareit.item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.BookingDto;
 import ru.practicum.shareit.user.User;
 
 
@@ -35,4 +37,10 @@ public class Item {
 
     @Column
     private Long request;
+
+    @Transient
+    private Booking lastBooking = new Booking();
+
+    @Transient
+    private Booking nextBooking;
 }
