@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ObjectCreationException;
 import ru.practicum.shareit.exception.ObjectExistenceException;
 
@@ -16,7 +17,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserDto user) {
-//        checkUser(user);
         return UserMapper.toUserDto(repository.save(UserMapper.toUser(user)));
     }
 
@@ -29,11 +29,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long userId, UserDto user) {
         Optional<User> userToUpdateOpt = repository.findById(userId);
         if (userToUpdateOpt.isEmpty())
             throwUserDoesntExists();
-        checkUser(user);
 
         User userToUpdate = userToUpdateOpt.get();
 
