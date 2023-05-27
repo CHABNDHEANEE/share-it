@@ -42,5 +42,5 @@ public class Item {
     private Booking lastBooking = new Booking();
 
     @Transient
-    private Booking nextBooking;
+    private Booking nextBooking = new Booking();
 }
