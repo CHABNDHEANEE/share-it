@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-public class ItemBookingServiceImpl implements ItemBookingService{
+public class ItemBookingServiceImpl implements ItemBookingService {
     private final BookingRepository repository;
 
     @Override
