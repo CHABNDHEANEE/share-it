@@ -3,7 +3,6 @@ package ru.practicum.shareit.item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingDto;
 import ru.practicum.shareit.user.User;
 

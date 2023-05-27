@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item;
 
-import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingDto;
 
 public class ItemMapper {

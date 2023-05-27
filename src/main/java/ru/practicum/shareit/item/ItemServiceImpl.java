@@ -22,6 +22,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
 
     @Override
+    @Transactional
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
         return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
@@ -50,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto updateItem(Long id, ItemDto item, Long userId) {
-        Item itemToUpdate = repository.findById(id).get();
+        Item itemToUpdate = getItemById(id);
 
         checkItemOnUpdate(itemToUpdate, item, userId);
 

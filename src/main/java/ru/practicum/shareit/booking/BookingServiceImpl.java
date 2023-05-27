@@ -2,19 +2,17 @@ package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -24,14 +22,11 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public BookingDto add(BookingDto bookingDto, long userId) {
         checkDate(bookingDto);
         Item item = getItemById(bookingDto.getItemId());
         User user = getUserById(userId);
-
-//        if (repository.findAllByItemId(item.getId()).stream().anyMatch(o -> bookingDto.getStart().isAfter(o.getStart()) && bookingDto.getStart().isBefore(o.getEnd()) ||
-//                bookingDto.getEnd().isAfter(o.getStart()) && bookingDto.getEnd().isBefore(o.getEnd())))
-//            throw new ObjectAvailabilityException("Time is busy");
 
         if (!item.isAvailable())
             throw new ObjectAvailabilityException("Item is not available");
@@ -41,6 +36,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional
     public BookingDto approve(long bookingId, boolean status, long userId) {
         BookingDto booking = BookingMapper.bookingToDto(getBookingById(bookingId));
         Item item = getItemById(booking.getItemId());
