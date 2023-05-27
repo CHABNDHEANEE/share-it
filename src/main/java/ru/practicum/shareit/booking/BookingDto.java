@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.item.Item;
@@ -15,6 +16,7 @@ import java.util.Date;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class BookingDto {
     private long id;
     @NotNull
