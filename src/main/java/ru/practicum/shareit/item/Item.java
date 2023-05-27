@@ -36,8 +36,8 @@ public class Item {
     private Long request;
 
     @Transient
-    private Booking lastBooking = new Booking();
+    private Booking lastBooking;
 
     @Transient
-    private Booking nextBooking = new Booking();
+    private Booking nextBooking;
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.ItemBookingService;
 import ru.practicum.shareit.exception.ObjectAccessException;
+import ru.practicum.shareit.exception.ObjectExistenceException;
 import ru.practicum.shareit.exception.ObjectUpdateException;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserService;
@@ -28,15 +29,18 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(Long id) {
-        return ItemMapper.toItemDto(repository.getReferenceById(id));
+        ItemDto item = ItemMapper.toItemDto(getItemById(id));
+        item.setLastBooking(bookingService.getLastBooking(item.getId()).orElse(null));
+        item.setNextBooking(bookingService.getNextBooking(item.getId()).orElse(null));
+        return item;
     }
 
     @Override
     public List<ItemDto> getItemsList(Long userId) {
         return repository.findAllByOwnerId(userId).stream()
                 .map(o -> {
-                    o.setLastBooking(bookingService.getLastBooking(o.getId()));
-                    o.setNextBooking(bookingService.getNextBooking(o.getId()));
+                    o.setLastBooking(bookingService.getLastBooking(o.getId()).orElse(null));
+                    o.setNextBooking(bookingService.getNextBooking(o.getId()).orElse(null));
                     return ItemMapper.toItemDto(o);
                 })
                 .collect(Collectors.toList());
@@ -80,5 +84,10 @@ public class ItemServiceImpl implements ItemService {
 
         if (item.getOwner() != null || item.getRequest() != null)
             throw new ObjectUpdateException("These fields can't be updated");
+    }
+
+    private Item getItemById(long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectExistenceException("Item doesn't exists"));
     }
 }

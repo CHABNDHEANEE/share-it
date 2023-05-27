@@ -1,9 +1,11 @@
 package ru.practicum.shareit.booking;
 
-public interface ItemBookingService {
-    Booking getLastBooking(long itemId);
+import java.util.Optional;
 
-    Booking getNextBooking(long itemId);
+public interface ItemBookingService {
+    Optional<Booking> getLastBooking(long itemId);
+
+    Optional<Booking> getNextBooking(long itemId);
 
     boolean checkBookingCompleted(long itemId, long userId);
 }

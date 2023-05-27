@@ -29,8 +29,14 @@ public class BookingServiceImpl implements BookingService {
         Item item = getItemById(bookingDto.getItemId());
         User user = getUserById(userId);
 
+//        if (repository.findAllByItemId(item.getId()).stream().anyMatch(o -> bookingDto.getStart().isAfter(o.getStart()) && bookingDto.getStart().isBefore(o.getEnd()) ||
+//                bookingDto.getEnd().isAfter(o.getStart()) && bookingDto.getEnd().isBefore(o.getEnd())))
+//            throw new ObjectAvailabilityException("Time is busy");
+
         if (!item.isAvailable())
             throw new ObjectAvailabilityException("Item is not available");
+        if (item.getOwner().equals(user))
+            throw new ObjectAccessException("You can't booking your item");
         return BookingMapper.bookingToDto(repository.save(BookingMapper.bookingFromDto(bookingDto, item, user)));
     }
 
@@ -41,6 +47,8 @@ public class BookingServiceImpl implements BookingService {
 
         if (item.getOwner().getId() != userId)
             throw new ObjectAccessException("You don't have access to this booking");
+        if (booking.getStatus().equals(BookingStatus.APPROVED) || booking.getStatus().equals(BookingStatus.REJECTED))
+            throw new ObjectAvailabilityException("Booking already " + booking.getStatus());
 
         booking.setStatus(status ? BookingStatus.APPROVED : BookingStatus.REJECTED);
         return BookingMapper.bookingToDto(repository.save(BookingMapper.bookingFromDto(booking, item, booking.getBooker())));

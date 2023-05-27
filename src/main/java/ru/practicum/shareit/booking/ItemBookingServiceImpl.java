@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,13 +16,13 @@ public class ItemBookingServiceImpl implements ItemBookingService{
     private final BookingRepository repository;
 
     @Override
-    public Booking getLastBooking(long itemId) {
-        return repository.findDistinctFirstByItemIdOrderByEndAsc(itemId);
+    public Optional<Booking> getLastBooking(long itemId) {
+        return repository.findFirstByItemIdAndEndBeforeOrderByEndDesc(itemId, LocalDateTime.now());
     }
 
     @Override
-    public Booking getNextBooking(long itemId) {
-        return repository.findDistinctFirstByItemIdOrderByStart(itemId);
+    public Optional<Booking> getNextBooking(long itemId) {
+        return repository.findFirstByItemIdAndStatus(itemId, BookingStatus.APPROVED);
     }
 
     @Override
