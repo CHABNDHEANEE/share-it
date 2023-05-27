@@ -4,7 +4,8 @@ create table if not exists users
         constraint users_pk
             primary key,
     name  varchar(255) not null,
-    email varchar(255) not null
+    email varchar(255) not null,
+    UNIQUE (email)
 );
 create table if not exists items
 (
@@ -45,3 +46,4 @@ create table if not exists requests
             references users,
     creation_date date          not null
 );
+
