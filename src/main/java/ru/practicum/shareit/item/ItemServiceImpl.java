@@ -28,12 +28,10 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDto getItem(Long id) {
+    public ItemDto getItem(Long id, long userId) {
         ItemDto item = ItemMapper.toItemDto(getItemById(id));
-//        item.setLastBooking(bookingService.getLastBooking(item.getId()).orElse(null));
-//        item.setNextBooking(bookingService.getNextBooking(item.getId()).orElse(null));
-        item.setLastBooking(bookingService.getLastBooking(item.getId()));
-        item.setNextBooking(bookingService.getNextBooking(item.getId()));
+        item.setLastBooking(item.getOwner().getId() == userId ? bookingService.getLastBooking(item.getId()) : null);
+        item.setNextBooking(item.getOwner().getId() == userId ? bookingService.getNextBooking(item.getId()) : null);
         return item;
     }
 
@@ -41,8 +39,6 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getItemsList(Long userId) {
         return repository.findAllByOwnerId(userId).stream()
                 .map(o -> {
-//                    o.setLastBooking(bookingService.getLastBooking(o.getId()).orElse(null));
-//                    o.setNextBooking(bookingService.getNextBooking(o.getId()).orElse(null));
                     o.setLastBooking(bookingService.getLastBooking(o.getId()));
                     o.setNextBooking(bookingService.getNextBooking(o.getId()));
 

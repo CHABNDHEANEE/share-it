@@ -17,8 +17,8 @@ public class ItemController {
     private final CommentService commentService;
 
     @GetMapping("/{itemId}")
-    public ItemDto getItem(@PathVariable Long itemId) {
-        return service.getItem(itemId);
+    public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USER_ID_HEADER) long userId) {
+        return service.getItem(itemId, userId);
     }
 
     @PostMapping

@@ -28,7 +28,9 @@ public class ItemBookingServiceImpl implements ItemBookingService{
     @Override
     public BookingDto getNextBooking(long itemId) {
         try {
-            return BookingMapper.bookingToDto(repository.findFirstByItemIdAndStatus(itemId, BookingStatus.APPROVED));
+            return BookingMapper.bookingToDto(repository.findFirstByItemIdAndStatusAndStartAfterOrderByStart(itemId,
+                    BookingStatus.APPROVED,
+                    LocalDateTime.now()));
         } catch (NullPointerException e) {
             return null;
         }
