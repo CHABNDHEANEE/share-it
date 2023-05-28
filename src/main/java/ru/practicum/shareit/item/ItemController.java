@@ -7,6 +7,7 @@ import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.comment.CommentService;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class ItemController {
         try {
             return service.addItem(item, userId);
         } catch (Exception e) {
-            throw new ObjectAccessException("error from contr " + e.getMessage());
+            throw new ObjectAccessException("error from contr " + Arrays.toString(e.getStackTrace()));
         }
     }
 
