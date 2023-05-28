@@ -45,7 +45,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public Comment addComment(@PathVariable long itemId, @RequestBody Comment comment, @RequestHeader long userId) {
+    public Comment addComment(@PathVariable long itemId, @RequestBody Comment comment, @RequestHeader(value = USER_ID_HEADER) Long userId) {
         return commentService.add(itemId, comment, userId);
     }
 }
