@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.BookingDto;
+import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.user.User;
 
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -39,4 +42,9 @@ public class Item {
 
     @Transient
     private BookingDto nextBooking;
+
+    @ElementCollection
+    @CollectionTable(name = "comments", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "text")
+    private Set<String> comments = new HashSet<>();
 }

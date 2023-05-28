@@ -13,6 +13,7 @@ public class ItemMapper {
                 .request(item.getRequest())
                 .lastBooking(item.getLastBooking())
                 .nextBooking(item.getNextBooking())
+                .comments(item.getComments())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class ItemMapper {
                 item.getOwner(),
                 item.getRequest(),
                 new BookingDto(),
-                new BookingDto());
+                new BookingDto(),
+                item.getComments());
     }
 }
