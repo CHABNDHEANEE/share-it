@@ -26,24 +26,9 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
 
-        Item item1;
-        try {
-            item1 = ItemMapper.toItem(item);
-        } catch (Exception e) {
-            throw new ObjectAccessException("error from 1 " + " " + e.getMessage());
-        }
-        Item savedItem;
-        try {
-            savedItem = repository.save(item1);
-        } catch (Exception e) {
-            throw new ObjectAccessException("error from 2 " + item1 + " " + e.getMessage());
-        }
-
-        try {
-            return ItemMapper.toItemDto(savedItem);
-        } catch (Exception e) {
-            throw new ObjectAccessException("error from 3 " + savedItem + " " + e.getMessage());
-        }
+        Item item1 = ItemMapper.toItem(item);
+        Item savedItem = repository.save(item1);
+        return ItemMapper.toItemDto(savedItem);
     }
 
     @Override

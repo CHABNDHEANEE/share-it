@@ -18,14 +18,12 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USER_ID_HEADER) long userId) {
-
         return service.getItem(itemId, userId);
     }
 
     @PostMapping
     public ItemDto addItem(@Valid @RequestBody ItemDto item,
                            @RequestHeader(value = USER_ID_HEADER) Long userId) {
-
         return service.addItem(item, userId);
     }
 

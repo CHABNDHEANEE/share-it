@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.BookingDto;
+import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 
@@ -17,6 +19,7 @@ import java.util.Set;
 @Table(name = "items", schema = "public")
 @AllArgsConstructor
 @RequiredArgsConstructor
+@Builder
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +37,8 @@ public class Item {
     @ManyToOne
     private User owner;
 
-    private long request;
+    @OneToOne
+    private ItemRequest request;
 
     @Transient
     private BookingDto lastBooking;
