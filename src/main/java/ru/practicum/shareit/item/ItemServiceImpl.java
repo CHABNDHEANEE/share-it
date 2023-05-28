@@ -41,7 +41,6 @@ public class ItemServiceImpl implements ItemService {
                 .map(o -> {
                     o.setLastBooking(bookingService.getLastBooking(o.getId()));
                     o.setNextBooking(bookingService.getNextBooking(o.getId()));
-
                     return ItemMapper.toItemDto(o);
                 })
                 .collect(Collectors.toList());
