@@ -2,6 +2,8 @@ package ru.practicum.shareit.item;
 
 import ru.practicum.shareit.booking.BookingDto;
 
+import java.util.HashSet;
+
 public class ItemMapper {
     public static ItemDto toItemDto(Item item) {
         return ItemDto.builder()
@@ -26,7 +28,7 @@ public class ItemMapper {
                 item.getRequest(),
                 new BookingDto(),
                 new BookingDto(),
-                item.getComments());
+                item.getComments() == null ? new HashSet<>() : item.getComments());
 
     }
 }
