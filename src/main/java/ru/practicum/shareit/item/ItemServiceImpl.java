@@ -22,13 +22,9 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
 
     @Override
-    @Transactional
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
-
-        Item item1 = ItemMapper.toItem(item);
-        Item savedItem = repository.save(item1);
-        return ItemMapper.toItemDto(savedItem);
+        return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
     }
 
     @Override
