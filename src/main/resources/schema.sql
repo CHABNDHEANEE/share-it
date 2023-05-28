@@ -18,7 +18,7 @@ create table if not exists items
     owner_id    integer       not null
         constraint items_users_id_fk
             references users,
-    request     integer       not null
+    request     integer
 );
 create table if not exists bookings
 (

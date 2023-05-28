@@ -34,7 +34,7 @@ public class Item {
     @ManyToOne
     private User owner;
 
-    private Long request;
+    private long request;
 
     @Transient
     private BookingDto lastBooking;
