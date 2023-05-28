@@ -27,5 +27,6 @@ public class ItemMapper {
                 new BookingDto(),
                 new BookingDto(),
                 item.getComments());
+
     }
 }
