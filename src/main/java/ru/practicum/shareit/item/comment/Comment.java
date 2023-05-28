@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @Builder
+@Table(name = "comments", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment {

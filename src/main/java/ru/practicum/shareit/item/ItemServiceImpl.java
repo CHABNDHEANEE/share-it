@@ -22,7 +22,6 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository repository;
 
     @Override
-    @Transactional
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
         return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
@@ -42,7 +41,6 @@ public class ItemServiceImpl implements ItemService {
                 .map(o -> {
                     o.setLastBooking(bookingService.getLastBooking(o.getId()));
                     o.setNextBooking(bookingService.getNextBooking(o.getId()));
-
                     return ItemMapper.toItemDto(o);
                 })
                 .collect(Collectors.toList());

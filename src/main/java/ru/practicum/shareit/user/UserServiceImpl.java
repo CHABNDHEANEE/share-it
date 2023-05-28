@@ -3,11 +3,9 @@ package ru.practicum.shareit.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.ObjectCreationException;
 import ru.practicum.shareit.exception.ObjectExistenceException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,20 +20,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(Long id) {
-        Optional<User> user = repository.findById(id);
-        if (user.isEmpty())
-            throwUserDoesntExists();
-        return UserMapper.toUserDto(user.get());
+        return UserMapper.toUserDto(getUserById(id));
     }
 
     @Override
     @Transactional
     public UserDto updateUser(Long userId, UserDto user) {
-        Optional<User> userToUpdateOpt = repository.findById(userId);
-        if (userToUpdateOpt.isEmpty())
-            throwUserDoesntExists();
-
-        User userToUpdate = userToUpdateOpt.get();
+        User userToUpdate = getUserById(userId);
 
         userToUpdate.setEmail(user.getEmail() == null ? userToUpdate.getEmail() : user.getEmail());
         userToUpdate.setName(user.getName() == null ? userToUpdate.getName() : user.getName());
@@ -55,14 +46,8 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private void checkUser(UserDto user) {
-        Optional<User> foundedUser = repository.findByEmail(user.getEmail());
-        if (foundedUser.isPresent())
-            throw new ObjectCreationException("User with this email already exists");
-
-    }
-
-    private void throwUserDoesntExists() {
-        throw new ObjectExistenceException("User doesn't exists");
+    private User getUserById(long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjectExistenceException("User doesn't exists"));
     }
 }
