@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.ObjectAccessException;
 import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.item.comment.CommentService;
 
@@ -18,13 +19,18 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ItemDto getItem(@PathVariable Long itemId, @RequestHeader(USER_ID_HEADER) long userId) {
+
         return service.getItem(itemId, userId);
     }
 
     @PostMapping
     public ItemDto addItem(@Valid @RequestBody ItemDto item,
                            @RequestHeader(value = USER_ID_HEADER) Long userId) {
-        return service.addItem(item, userId);
+        try {
+            return service.addItem(item, userId);
+        } catch (Exception e) {
+            throw new ObjectAccessException("error from controller");
+        }
     }
 
     @PatchMapping("/{itemId}")
