@@ -28,7 +28,7 @@ public class ItemMapper {
                 item.getRequest(),
                 new BookingDto(),
                 new BookingDto(),
-                item.getComments() == null ? new HashSet<>() : item.getComments());
+                new HashSet<>());
 
     }
 }
