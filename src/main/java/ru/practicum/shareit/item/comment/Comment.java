@@ -21,7 +21,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @ManyToOne
     private Item item;
 
     @ManyToOne
