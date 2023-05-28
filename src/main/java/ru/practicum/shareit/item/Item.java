@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.shareit.booking.BookingDto;
-import ru.practicum.shareit.item.comment.Comment;
 import ru.practicum.shareit.user.User;
 
 
