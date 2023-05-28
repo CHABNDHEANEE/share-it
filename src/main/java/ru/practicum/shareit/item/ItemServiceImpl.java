@@ -24,17 +24,12 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto addItem(ItemDto item, Long userId) {
-
-        try {
-            item.setOwner(UserMapper.toUser(userService.getUser(userId)));
-        } catch (Exception e) {
-            throw new ObjectAccessException("error from user");
-        }
+        item.setOwner(UserMapper.toUser(userService.getUser(userId)));
 
         try {
             return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
         } catch (Exception e) {
-            throw new ObjectAccessException("error from item");
+            throw new ObjectAccessException(e.getMessage());
         }
     }
 
