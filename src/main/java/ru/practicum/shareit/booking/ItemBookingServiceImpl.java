@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
@@ -12,18 +13,21 @@ public class ItemBookingServiceImpl implements ItemBookingService {
     private final BookingRepository repository;
 
     @Override
-    public BookingDto getLastBooking(long itemId) {
+    public ItemBooking getLastBooking(long itemId) {
         try {
-            return BookingMapper.bookingToDto(repository.findFirstByItemIdAndEndBeforeOrderByEndDesc(itemId, LocalDateTime.now()));
+            return BookingMapper.bookingToItemBooking(repository.findAllByItemId(itemId).stream()
+                    .filter(o -> o.getStart().isBefore(LocalDateTime.now()) || o.getStart().isEqual(LocalDateTime.now()))
+                    .max(Comparator.comparing(Booking::getEnd)).orElseThrow(NullPointerException::new)
+                    );
         } catch (NullPointerException e) {
             return null;
         }
     }
 
     @Override
-    public BookingDto getNextBooking(long itemId) {
+    public ItemBooking getNextBooking(long itemId) {
         try {
-            return BookingMapper.bookingToDto(repository.findFirstByItemIdAndStatusAndStartAfterOrderByStart(itemId,
+            return BookingMapper.bookingToItemBooking(repository.findFirstByItemIdAndStatusAndStartAfterOrderByStart(itemId,
                     BookingStatus.APPROVED,
                     LocalDateTime.now()));
         } catch (NullPointerException e) {
@@ -33,6 +37,7 @@ public class ItemBookingServiceImpl implements ItemBookingService {
 
     @Override
     public boolean checkBookingCompleted(long itemId, long userId) {
-        return repository.findBookingByEndBeforeAndItemIdAndBookerId(LocalDateTime.now(), itemId, userId).isPresent();
+        return repository.findFirstBookingByEndBeforeAndItemIdAndBookerIdAndStatus(LocalDateTime.now(),
+                itemId, userId, BookingStatus.APPROVED).isEmpty();
     }
 }

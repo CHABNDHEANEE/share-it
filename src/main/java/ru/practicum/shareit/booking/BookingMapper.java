@@ -28,4 +28,13 @@ public class BookingMapper {
                 .status(booking.getStatus() == null ? BookingStatus.WAITING : booking.getStatus())
                 .build();
     }
+
+    public static ItemBooking bookingToItemBooking(Booking booking) {
+        return ItemBooking.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .start(booking.getStart())
+                .end(booking.getEnd())
+                .build();
+    }
 }

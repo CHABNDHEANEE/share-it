@@ -9,6 +9,7 @@ public class CommentMapper {
                 .id(com.getId())
                 .item(item)
                 .user(author)
+                .created(com.getCreated())
                 .text(com.getText())
                 .build();
     }
@@ -17,6 +18,8 @@ public class CommentMapper {
         return CommentDto.builder()
                 .id(com.getId())
                 .text(com.getText())
+                .authorName(com.getUser().getName())
+                .created(com.getCreated())
                 .build();
     }
 }

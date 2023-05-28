@@ -7,6 +7,7 @@ import ru.practicum.shareit.booking.ItemBookingService;
 import ru.practicum.shareit.exception.ObjectAccessException;
 import ru.practicum.shareit.exception.ObjectExistenceException;
 import ru.practicum.shareit.exception.ObjectUpdateException;
+import ru.practicum.shareit.item.comment.CommentService;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserService;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     private final ItemBookingService bookingService;
+    private final CommentService commentService;
     private final ItemRepository repository;
 
     @Override
@@ -32,6 +34,7 @@ public class ItemServiceImpl implements ItemService {
         ItemDto item = ItemMapper.toItemDto(getItemById(id));
         item.setLastBooking(item.getOwner().getId() == userId ? bookingService.getLastBooking(item.getId()) : null);
         item.setNextBooking(item.getOwner().getId() == userId ? bookingService.getNextBooking(item.getId()) : null);
+        item.setComments(commentService.getAllCommentsByItemId(id) == null ? new ArrayList<>() : commentService.getAllCommentsByItemId(id));
         return item;
     }
 
@@ -41,6 +44,7 @@ public class ItemServiceImpl implements ItemService {
                 .map(o -> {
                     o.setLastBooking(bookingService.getLastBooking(o.getId()));
                     o.setNextBooking(bookingService.getNextBooking(o.getId()));
+                    o.setComments(commentService.getAllCommentsByItemId(o.getId()));
                     return ItemMapper.toItemDto(o);
                 })
                 .collect(Collectors.toList());
