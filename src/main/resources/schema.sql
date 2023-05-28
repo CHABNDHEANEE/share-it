@@ -57,6 +57,7 @@ create table if not exists comments
     user_id bigint        not null
         constraint comments_users_id_fk
             references users,
-    text      varchar(2000) not null
+    text      varchar(2000) not null,
+    created     timestamp   not null
 );
 
