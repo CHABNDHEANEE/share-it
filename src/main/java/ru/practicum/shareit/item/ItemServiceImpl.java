@@ -29,7 +29,7 @@ public class ItemServiceImpl implements ItemService {
         try {
             return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
         } catch (Exception e) {
-            throw new ObjectAccessException(item.getOwner().toString());
+            throw new ObjectAccessException(item.getOwner().toString() + " " + item);
         }
     }
 
