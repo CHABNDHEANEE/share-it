@@ -16,19 +16,19 @@ public class BookingController {
 
     @PostMapping
     public BookingDto addBooking(@RequestBody @Valid BookingDto booking, @RequestHeader(value = USER_ID_HEADER) long userId) {
-        return service.add(booking, userId);
+        return service.addBooking(booking, userId);
     }
 
     @PatchMapping("/{bookingId}")
     public BookingDto approveBooking(@PathVariable long bookingId,
                            @RequestParam boolean approved,
                            @RequestHeader(value = USER_ID_HEADER) long userId) {
-        return service.approve(bookingId, approved, userId);
+        return service.approveBooking(bookingId, approved, userId);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getBookingById(@PathVariable long bookingId, @RequestHeader(value = USER_ID_HEADER) long userId) {
-        return service.get(bookingId, userId);
+        return service.getBooking(bookingId, userId);
     }
 
     @GetMapping

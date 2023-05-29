@@ -23,21 +23,24 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto add(BookingDto bookingDto, long userId) {
+    public BookingDto addBooking(BookingDto bookingDto, long userId) {
         checkDate(bookingDto);
         Item item = getItemById(bookingDto.getItemId());
-        User user = getUserById(userId);
 
-        if (!item.isAvailable())
+        if (!item.isAvailable()) {
             throw new ObjectAvailabilityException("Item is not available");
-        if (item.getOwner().equals(user))
+        }
+        User user = getUserById(userId);
+        if (item.getOwner().equals(user)) {
             throw new ObjectAccessException("You can't booking your item");
+        }
+
         return BookingMapper.bookingToDto(repository.save(BookingMapper.bookingFromDto(bookingDto, item, user)));
     }
 
     @Override
     @Transactional
-    public BookingDto approve(long bookingId, boolean status, long userId) {
+    public BookingDto approveBooking(long bookingId, boolean status, long userId) {
         BookingDto booking = BookingMapper.bookingToDto(getBookingById(bookingId));
         Item item = getItemById(booking.getItemId());
 
@@ -51,7 +54,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto get(long bookingId, long userId) {
+    public BookingDto getBooking(long bookingId, long userId) {
         Booking booking = getBookingById(bookingId);
         User user = getUserById(userId);
 
