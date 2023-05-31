@@ -94,18 +94,18 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private boolean filterByCondition(Booking booking, BookingCondition cond) {
-        final LocalDateTime CURRENT_TIME = LocalDateTime.now();
+        final LocalDateTime currentTime = LocalDateTime.now();
         switch (cond) {
             case REJECTED:
                 return booking.getStatus().equals(BookingStatus.REJECTED);
             case PAST:
-                return booking.getEnd().isBefore(CURRENT_TIME);
+                return booking.getEnd().isBefore(currentTime);
             case CURRENT:
-                return booking.getStart().isBefore(CURRENT_TIME) &&
-                        booking.getEnd().isAfter(CURRENT_TIME);
+                return booking.getStart().isBefore(currentTime) &&
+                        booking.getEnd().isAfter(currentTime);
             case FUTURE:
-                return booking.getStart().isAfter(CURRENT_TIME) ||
-                        booking.getStart().equals(CURRENT_TIME);
+                return booking.getStart().isAfter(currentTime) ||
+                        booking.getStart().equals(currentTime);
             case WAITING:
                 return booking.getStatus().equals(BookingStatus.WAITING);
             default:

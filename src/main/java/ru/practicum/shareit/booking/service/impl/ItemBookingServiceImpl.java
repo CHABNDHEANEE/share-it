@@ -21,9 +21,9 @@ public class ItemBookingServiceImpl implements ItemBookingService {
     @Override
     public ItemBooking getLastBooking(long itemId) {
 
-        final LocalDateTime CURRENT_TIME = LocalDateTime.now();
+        final LocalDateTime currentTime = LocalDateTime.now();
         final Booking lastBooking = repository.findAllByItemId(itemId).stream()
-                .filter(o -> o.getStart().isBefore(CURRENT_TIME) || o.getStart().isEqual(CURRENT_TIME))
+                .filter(o -> o.getStart().isBefore(currentTime) || o.getStart().isEqual(currentTime))
                 .max(Comparator.comparing(Booking::getEnd)).orElse(null);
 
         return lastBooking == null ? null : BookingMapper.bookingToItemBooking(lastBooking);
@@ -32,10 +32,10 @@ public class ItemBookingServiceImpl implements ItemBookingService {
     @Override
     public ItemBooking getNextBooking(long itemId) {
         try {
-            final LocalDateTime CURRENT_TIME = LocalDateTime.now();
+            final LocalDateTime currentTime = LocalDateTime.now();
             final Booking nextBooking = repository.findFirstByItemIdAndStatusAndStartAfterOrderByStart(itemId,
                     BookingStatus.APPROVED,
-                    CURRENT_TIME);
+                    currentTime);
 
             return BookingMapper.bookingToItemBooking(nextBooking);
         } catch (NullPointerException e) {
