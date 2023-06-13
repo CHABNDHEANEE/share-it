@@ -37,7 +37,7 @@ public class Item {
     @ManyToOne
     private User owner;
 
-    @OneToOne
+    @ManyToOne
     private ItemRequest request;
 
     @Transient

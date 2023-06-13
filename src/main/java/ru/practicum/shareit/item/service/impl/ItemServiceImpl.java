@@ -9,7 +9,7 @@ import ru.practicum.shareit.exception.ObjectExistenceException;
 import ru.practicum.shareit.exception.ObjectUpdateException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.ItemMapper;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.repo.ItemRepository;
 import ru.practicum.shareit.item.comment.service.CommentService;
 import ru.practicum.shareit.item.service.ItemService;
