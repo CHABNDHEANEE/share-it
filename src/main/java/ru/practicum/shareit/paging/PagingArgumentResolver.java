@@ -7,6 +7,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.validation.ValidationException;
+import java.util.Objects;
 
 public class PagingArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
@@ -16,9 +17,9 @@ public class PagingArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         PagingParam attr = parameter.getParameterAnnotation(PagingParam.class);
-        int[] value = attr.value();
+        int[] value = Objects.requireNonNull(attr).value();
 
         return setValues(webRequest.getParameter("from"), webRequest.getParameter("size"), value);
     }

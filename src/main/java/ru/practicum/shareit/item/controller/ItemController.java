@@ -10,8 +10,6 @@ import ru.practicum.shareit.paging.Paging;
 import ru.practicum.shareit.paging.PagingParam;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
