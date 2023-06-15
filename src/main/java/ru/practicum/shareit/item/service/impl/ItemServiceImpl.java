@@ -1,6 +1,8 @@
 package ru.practicum.shareit.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.service.ItemBookingService;
@@ -13,6 +15,9 @@ import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.repo.ItemRepository;
 import ru.practicum.shareit.item.comment.service.CommentService;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repo.ItemRequestRepository;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -27,11 +32,14 @@ public class ItemServiceImpl implements ItemService {
     private final ItemBookingService bookingService;
     private final CommentService commentService;
     private final ItemRepository repository;
+    private final ItemRequestRepository requestRepository;
 
     @Override
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
-        return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item)));
+        ItemRequest request = item.getRequestId() == null ? null : requestRepository.getReferenceById(item.getRequestId());
+
+        return ItemMapper.toItemDto(repository.save(ItemMapper.toItem(item, request)));
     }
 
     @Override
@@ -44,8 +52,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemsList(Long userId) {
-        return repository.findAllByOwnerId(userId).stream()
+    public List<ItemDto> getItemsList(Long userId, int from, int size) {
+        return repository.findAllByOwnerId(userId, createPageable(from, size)).stream()
                 .map(o -> {
                     o.setLastBooking(bookingService.getLastBooking(o.getId()));
                     o.setNextBooking(bookingService.getNextBooking(o.getId()));
@@ -71,11 +79,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> searchItem(String text) {
+    public List<ItemDto> searchItem(String text, int from, int size) {
         if (text.isBlank())
             return new ArrayList<>();
 
-        return repository.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(text, text)
+        return repository.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(text, text, createPageable(from, size))
                 .stream()
                 .filter(Item::isAvailable)
                 .map(ItemMapper::toItemDto)
@@ -91,12 +99,17 @@ public class ItemServiceImpl implements ItemService {
     private void checkItemOnUpdate(Item itemToUpdate, ItemDto item, Long userId) {
         checkItemOwner(itemToUpdate, userId);
 
-        if (item.getOwner() != null || item.getRequest() != null)
+        if (item.getOwner() != null || item.getRequestId() != null)
             throw new ObjectUpdateException("These fields can't be updated");
     }
 
     private Item getItemById(long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ObjectExistenceException("Item doesn't exists"));
+    }
+
+    private Pageable createPageable(int from, int size) {
+        int page = from == 0 ? 0 : from / size;
+        return PageRequest.of(page, size);
     }
 }
