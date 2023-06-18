@@ -34,6 +34,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository requestRepository;
 
     @Override
+    @Transactional
     public ItemDto addItem(ItemDto item, Long userId) {
         item.setOwner(UserMapper.toUser(userService.getUser(userId)));
         ItemRequest request = item.getRequestId() == null ? null : requestRepository.getReferenceById(item.getRequestId());

@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import ru.practicum.shareit.booking.model.ItemBooking;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.user.model.User;
@@ -12,6 +11,8 @@ import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class ItemDto {
     private long id;
     @NotBlank
