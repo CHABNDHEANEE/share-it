@@ -28,6 +28,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static ru.practicum.shareit.auxilary.RequestWithJson.patchJson;
+import static ru.practicum.shareit.auxilary.RequestWithJson.postJson;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
@@ -115,30 +117,6 @@ public class ItemControllerTest {
         mockMvc.perform(postJson("/items/1/comment", comment).header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.text").isString());
-    }
-
-    private static MockHttpServletRequestBuilder postJson(String uri, Object body) {
-        try {
-            String json = new ObjectMapper().writeValueAsString(body);
-            return post(uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(json);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static MockHttpServletRequestBuilder patchJson(String uri, Object body) {
-        try {
-            String json = new ObjectMapper().writeValueAsString(body);
-            return patch(uri)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .content(json);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private static MvcResult checkItemProp(ResultActions request) throws Exception {
