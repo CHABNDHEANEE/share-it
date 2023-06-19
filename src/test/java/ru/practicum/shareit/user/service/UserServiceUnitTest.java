@@ -72,9 +72,8 @@ public class UserServiceUnitTest {
     public void updateUserName_ForWrongUserId_ShouldThrowException() {
         when(userRepository.findById(99L)).thenReturn(Optional.empty());
 
-        ObjectExistenceException exception = assertThrows(ObjectExistenceException.class, () -> {
-            userService.updateUser(99L, UserDto.builder().build());
-        });
+        ObjectExistenceException exception = assertThrows(ObjectExistenceException.class, () ->
+                userService.updateUser(99L, UserDto.builder().build()));
 
         assertThat(exception.getMessage(), is("User doesn't exists"));
     }

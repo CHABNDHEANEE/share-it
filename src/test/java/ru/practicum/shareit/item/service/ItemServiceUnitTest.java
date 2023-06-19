@@ -31,15 +31,11 @@ import static org.mockito.Mockito.*;
 public class ItemServiceUnitTest {
 
     @Mock
-    private UserServiceImpl userService;
-    @Mock
     private ItemBookingServiceImpl bookingService;
     @Mock
     private CommentServiceImpl commentService;
     @Mock
     private ItemRepository itemRepository;
-    @Mock
-    private ItemRequestRepository itemRequestRepository;
     @InjectMocks
     private ItemServiceImpl itemService;
 
