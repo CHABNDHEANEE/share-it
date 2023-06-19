@@ -11,28 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.impl.ItemRequestServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import ru.practicum.shareit.item.comment.dto.CommentDto;
-import ru.practicum.shareit.item.comment.service.impl.CommentServiceImpl;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.service.impl.ItemServiceImpl;
-import ru.practicum.shareit.user.model.User;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.time.Instant;
 import java.util.Date;
@@ -40,8 +20,6 @@ import java.util.Date;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
 import static ru.practicum.shareit.auxilary.RequestWithJson.postJson;
 
 
@@ -102,8 +80,8 @@ public class ItemRequestControllerTest {
         checkItemProp(mockMvc.perform(get("/requests/1").header("X-Sharer-User-Id", 1L)));
     }
 
-    private static MvcResult checkItemProp(ResultActions request) throws Exception {
-        return request.andExpect(status().isOk())
+    private static void checkItemProp(ResultActions request) throws Exception {
+        request.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.description").isString())
                 .andExpect(jsonPath("$.created").isNotEmpty())

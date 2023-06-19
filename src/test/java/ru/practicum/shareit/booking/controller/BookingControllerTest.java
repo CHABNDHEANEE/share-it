@@ -14,7 +14,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingCondition;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.impl.BookingServiceImpl;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -25,8 +24,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
 import static ru.practicum.shareit.auxilary.RequestWithJson.postJson;
 
 import java.time.LocalDateTime;
@@ -135,8 +132,8 @@ public class BookingControllerTest {
                 .andReturn();
     }
 
-    private static MvcResult checkBookingListProps(ResultActions result) throws Exception {
-        return result.andExpect(status().isOk())
+    private static void checkBookingListProps(ResultActions result) throws Exception {
+        result.andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").isNumber())
                 .andExpect(jsonPath("$[0].itemId").isNumber())
                 .andExpect(jsonPath("$[0].item").isNotEmpty())

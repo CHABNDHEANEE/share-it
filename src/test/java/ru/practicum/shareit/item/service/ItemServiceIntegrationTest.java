@@ -1,33 +1,18 @@
 package ru.practicum.shareit.item.service;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingMapper;
-import ru.practicum.shareit.booking.model.BookingStatus;
-import ru.practicum.shareit.booking.model.ItemBooking;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.booking.service.ItemBookingService;
-import ru.practicum.shareit.booking.service.impl.ItemBookingServiceImpl;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.service.CommentService;
-import ru.practicum.shareit.item.comment.service.impl.CommentServiceImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.repo.ItemRepository;
-import ru.practicum.shareit.item.service.impl.ItemServiceImpl;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.repo.ItemRequestRepository;
 import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -10,8 +10,6 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.ItemBooking;
 import ru.practicum.shareit.booking.service.impl.ItemBookingServiceImpl;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
-import ru.practicum.shareit.item.comment.model.Comment;
-import ru.practicum.shareit.item.comment.service.CommentService;
 import ru.practicum.shareit.item.comment.service.impl.CommentServiceImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
@@ -19,7 +17,6 @@ import ru.practicum.shareit.item.repo.ItemRepository;
 import ru.practicum.shareit.item.service.impl.ItemServiceImpl;
 import ru.practicum.shareit.request.repo.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
 import java.time.LocalDateTime;
@@ -46,8 +43,6 @@ public class ItemServiceUnitTest {
     @InjectMocks
     private ItemServiceImpl itemService;
 
-    private User user1;
-    private User user2;
     Item item1;
     ItemDto item1Dto;
     ItemBooking itemBooking1;
@@ -58,8 +53,8 @@ public class ItemServiceUnitTest {
     void beforeEach() {
         LocalDateTime currentTime = LocalDateTime.now();
 
-        user1 = new User(1L, "user1 name", "user1@mail.com");
-        user2 = new User(2L, "user2 name", "user2@mail.com");
+        User user1 = new User(1L, "user1 name", "user1@mail.com");
+        User user2 = new User(2L, "user2 name", "user2@mail.com");
         item1 = Item.builder()
                 .id(1L)
                 .name("item1 name")
