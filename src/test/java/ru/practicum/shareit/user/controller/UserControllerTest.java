@@ -38,6 +38,7 @@ public class UserControllerTest {
 
     private UserDto user1;
     private UserDto userResult;
+
     @BeforeEach
     void beforeEach() {
         user1 = UserDto.builder()
