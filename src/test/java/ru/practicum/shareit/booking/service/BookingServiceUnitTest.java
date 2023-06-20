@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -19,7 +18,6 @@ import ru.practicum.shareit.exception.ObjectCreationException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repo.UserRepository;
-import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -81,9 +79,8 @@ public class BookingServiceUnitTest {
     public void addBooking_AndExpectError() {
         booking.setEnd(LocalDateTime.MIN);
 
-        ObjectCreationException exception = assertThrows(ObjectCreationException.class, () -> {
-            bookingService.addBooking(BookingMapper.bookingToDto(booking), 1L);
-        });
+        ObjectCreationException exception = assertThrows(ObjectCreationException.class, () ->
+                bookingService.addBooking(BookingMapper.bookingToDto(booking), 1L));
 
         assertThat(exception.getMessage(), is("End date cannot be before/equal start date"));
     }
@@ -106,9 +103,8 @@ public class BookingServiceUnitTest {
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
 
-        ObjectAccessException exception = assertThrows(ObjectAccessException.class, () -> {
-            bookingService.getBooking(1L, 2L);
-        });
+        ObjectAccessException exception = assertThrows(ObjectAccessException.class, () ->
+                bookingService.getBooking(1L, 2L));
 
         assertThat(exception.getMessage(), is("You don't have access to this booking"));
     }

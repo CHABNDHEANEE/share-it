@@ -105,9 +105,8 @@ public class ItemServiceUnitTest {
         updatedItem.setOwner(new User());
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item1));
 
-        ObjectUpdateException exception = assertThrows(ObjectUpdateException.class, () -> {
-            itemService.updateItem(1L, updatedItem, 1L);
-        });
+        ObjectUpdateException exception = assertThrows(ObjectUpdateException.class, () ->
+                itemService.updateItem(1L, updatedItem, 1L));
 
         assertThat(exception.getMessage(), is("These fields can't be updated"));
     }

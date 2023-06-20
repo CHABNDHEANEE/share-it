@@ -38,8 +38,6 @@ public class RequestServiceUnitTest {
     @InjectMocks
     private ItemRequestServiceImpl requestService;
 
-    private User owner;
-    private User requestor;
     private Item item;
     private ItemRequest request;
 
@@ -47,12 +45,12 @@ public class RequestServiceUnitTest {
     void beforeEach() {
         Date currentDate = Date.from(Instant.now());
 
-        owner = User.builder()
+        User owner = User.builder()
                 .id(1)
                 .name("user1 name")
                 .email("user1@testmail.com")
                 .build();
-        requestor = User.builder()
+        User requestor = User.builder()
                 .id(2)
                 .name("user2 name")
                 .email("user2@testmail.com")
