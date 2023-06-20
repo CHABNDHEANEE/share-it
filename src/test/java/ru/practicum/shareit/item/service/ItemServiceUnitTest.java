@@ -6,9 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.ItemBooking;
 import ru.practicum.shareit.booking.service.impl.ItemBookingServiceImpl;
+import ru.practicum.shareit.exception.ObjectUpdateException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
 import ru.practicum.shareit.item.comment.service.impl.CommentServiceImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -23,6 +25,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,6 +97,38 @@ public class ItemServiceUnitTest {
         verify(bookingService, times(1)).getNextBooking(1L);
         verify(commentService, times(2)).getAllCommentsByItemId(1L);
         assertItem(item1, result);
+    }
+
+    @Test
+    public void updateItem_AndExpectError() {
+        ItemDto updatedItem = item1Dto;
+        updatedItem.setOwner(new User());
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item1));
+
+        ObjectUpdateException exception = assertThrows(ObjectUpdateException.class, () -> {
+            itemService.updateItem(1L, updatedItem, 1L);
+        });
+
+        assertThat(exception.getMessage(), is("These fields can't be updated"));
+    }
+
+    @Test
+    public void searchItem_WithBlankText_AndExpectEmptyList() {
+        List<ItemDto> result = itemService.searchItem("", 0, 10);
+
+        assertThat(result.isEmpty(), is(true));
+    }
+
+    @Test
+    public void searchItemTest() {
+        when(itemRepository.findAllByDescriptionContainingIgnoreCaseOrNameContainingIgnoreCase(
+                "item1", "item1", PageRequest.of(0, 10)))
+                .thenReturn(List.of(item1));
+
+        List<ItemDto> result = itemService.searchItem("item1", 0, 10);
+
+        assertThat(result.size(), is(1));
+        assertItem(item1, result.get(0));
     }
 
     private void assertItem(Item input, ItemDto output) {

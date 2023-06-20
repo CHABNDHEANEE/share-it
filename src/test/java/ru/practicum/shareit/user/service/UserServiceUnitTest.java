@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repo.UserRepository;
 import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -76,6 +77,23 @@ public class UserServiceUnitTest {
                 userService.updateUser(99L, UserDto.builder().build()));
 
         assertThat(exception.getMessage(), is("User doesn't exists"));
+    }
+
+    @Test
+    public void deleteUserTest() {
+        userService.deleteUser(1L);
+    }
+
+    @Test
+    public void getAllTest() {
+        when(userRepository.findAll()).thenReturn(List.of(user1));
+
+        List<UserDto> result = userService.getAll();
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0).getId(), is(1L));
+        assertThat(result.get(0).getName(), is("user1 name"));
+        assertThat(result.get(0).getEmail(), is("user1@testmail.com"));
     }
 
     private void assertUsers(User input, UserDto output) {

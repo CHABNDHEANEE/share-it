@@ -129,7 +129,7 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkDate(BookingDto booking) {
         if (booking.getStart().isAfter(booking.getEnd()) || booking.getStart().equals(booking.getEnd()))
-            throw new ObjectCreationException("End date cannot be after/equal start date");
+            throw new ObjectCreationException("End date cannot be before/equal start date");
     }
 
     private Pageable createPageable(int from, int size) {
