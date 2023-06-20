@@ -92,6 +92,28 @@ public class BookingServiceUnitTest {
     }
 
     @Test
+    public void addBooking_AndExpectAvailabilityException() {
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+        item.setAvailable(false);
+
+        ObjectAvailabilityException exception = assertThrows(ObjectAvailabilityException.class, () ->
+                bookingService.addBooking(BookingMapper.bookingToDto(booking), 1L));
+
+        assertThat(exception.getMessage(), is("Item is not available"));
+    }
+
+    @Test
+    public void addBooking_AndExpectAccessException() {
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        ObjectAccessException exception = assertThrows(ObjectAccessException.class, () ->
+                bookingService.addBooking(BookingMapper.bookingToDto(booking), 1L));
+
+        assertThat(exception.getMessage(), is("You can't booking your item"));
+    }
+
+    @Test
     public void approveBooking_AndExpectAccessError() {
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
