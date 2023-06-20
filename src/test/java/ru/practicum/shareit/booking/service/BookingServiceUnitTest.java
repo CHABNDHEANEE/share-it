@@ -11,11 +11,14 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingCondition;
+import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repo.BookingRepository;
 import ru.practicum.shareit.booking.service.impl.BookingServiceImpl;
 import ru.practicum.shareit.exception.ObjectAccessException;
+import ru.practicum.shareit.exception.ObjectAvailabilityException;
 import ru.practicum.shareit.exception.ObjectCreationException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repo.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repo.UserRepository;
 
@@ -36,12 +39,15 @@ public class BookingServiceUnitTest {
     private BookingRepository bookingRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private ItemRepository itemRepository;
     @InjectMocks
     private BookingServiceImpl bookingService;
 
     private Booking booking;
     private User user;
     private User user2;
+    private Item item;
 
     @BeforeEach
     void beforeEach() {
@@ -58,7 +64,7 @@ public class BookingServiceUnitTest {
                 .email("user2@testmail.com")
                 .build();
 
-        Item item = Item.builder()
+        item = Item.builder()
                 .id(1L)
                 .name("item name")
                 .description("description")
@@ -83,6 +89,28 @@ public class BookingServiceUnitTest {
                 bookingService.addBooking(BookingMapper.bookingToDto(booking), 1L));
 
         assertThat(exception.getMessage(), is("End date cannot be before/equal start date"));
+    }
+
+    @Test
+    public void approveBooking_AndExpectAccessError() {
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+
+        ObjectAccessException exception = assertThrows(ObjectAccessException.class, () ->
+                bookingService.approveBooking(1L, true, 2L));
+        assertThat(exception.getMessage(), is("You don't have access to this booking"));
+    }
+
+    @Test
+    public void approveBooking_AndExpectAvailabilityException() {
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+        booking.setStatus(BookingStatus.APPROVED);
+
+        ObjectAvailabilityException exception = assertThrows(ObjectAvailabilityException.class, () ->
+                bookingService.approveBooking(1L, true, 1L));
+        assertThat(exception.getMessage(), is("Booking already APPROVED"));
+
     }
 
     @Test
@@ -116,6 +144,82 @@ public class BookingServiceUnitTest {
                 .thenReturn(List.of(booking));
 
         List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.ALL, 0, 10);
+
+        assertThat(result.size(), is(1));
+        assertBooking(booking, result.get(0));
+    }
+
+    @Test
+    public void getAllByUser_WithFilterRejected() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
+
+        booking.setStatus(BookingStatus.REJECTED);
+
+        List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.REJECTED, 0, 10);
+
+        assertThat(result.size(), is(1));
+        assertBooking(booking, result.get(0));
+    }
+
+    @Test
+    public void getAllByUser_WithFilterPast() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        booking.setStart(currentTime.minusDays(1));
+        booking.setEnd(currentTime.minusHours(1));
+
+        List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.PAST, 0, 10);
+
+        assertThat(result.size(), is(1));
+        assertBooking(booking, result.get(0));
+    }
+
+    @Test
+    public void getAllByUser_WithFilterCurrent() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        booking.setStart(currentTime.minusDays(1));
+        booking.setEnd(currentTime.plusDays(1));
+
+        List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.CURRENT, 0, 10);
+
+        assertThat(result.size(), is(1));
+        assertBooking(booking, result.get(0));
+    }
+
+    @Test
+    public void getAllByUser_WithFilterFuture() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        booking.setStart(currentTime.plusDays(1));
+        booking.setEnd(currentTime.plusDays(2));
+
+        List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.FUTURE, 0, 10);
+
+        assertThat(result.size(), is(1));
+        assertBooking(booking, result.get(0));
+    }
+
+    @Test
+    public void getAllByUser_WithFilterWaiting() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
+
+        booking.setStatus(BookingStatus.WAITING);
+
+        List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.WAITING, 0, 10);
 
         assertThat(result.size(), is(1));
         assertBooking(booking, result.get(0));
