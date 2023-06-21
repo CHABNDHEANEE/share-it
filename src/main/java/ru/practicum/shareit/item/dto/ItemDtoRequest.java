@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ItemDtoRequest {
 
-    long id;
+    private long id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    boolean available;
+    private boolean available;
 
-    long requestId;
+    private long requestId;
 }
