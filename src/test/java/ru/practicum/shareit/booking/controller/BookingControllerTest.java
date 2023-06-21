@@ -14,7 +14,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingCondition;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.service.BookingService;
-import ru.practicum.shareit.booking.service.impl.BookingServiceImpl;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -80,7 +79,7 @@ public class BookingControllerTest {
         when(bookingService.addBooking(bookingDto, 2L)).thenReturn(bookingResult);
 
         checkBookingProps(mockMvc.perform(postJson("/bookings", bookingDto)
-                .header("", 2L)));
+                .header(USER_ID_HEADER, 2L)));
     }
 
     @Test

@@ -237,7 +237,9 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getBookingsByItems() {
-        mockUserAndBooking();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
 
         List<BookingDto> result = bookingService.getBookingsByItems(1L, BookingCondition.ALL, 0, 10);
 
