@@ -161,9 +161,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getAllByUserTest() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         List<BookingDto> result = bookingService.getAllByUser(1L, BookingCondition.ALL, 0, 10);
 
@@ -173,9 +171,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getAllByUser_WithFilterRejected() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         booking.setStatus(BookingStatus.REJECTED);
 
@@ -187,9 +183,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getAllByUser_WithFilterPast() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         LocalDateTime currentTime = LocalDateTime.now();
         booking.setStart(currentTime.minusDays(1));
@@ -203,9 +197,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getAllByUser_WithFilterCurrent() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         LocalDateTime currentTime = LocalDateTime.now();
         booking.setStart(currentTime.minusDays(1));
@@ -219,9 +211,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getAllByUser_WithFilterFuture() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         LocalDateTime currentTime = LocalDateTime.now();
         booking.setStart(currentTime.plusDays(1));
@@ -235,9 +225,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getAllByUser_WithFilterWaiting() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         booking.setStatus(BookingStatus.WAITING);
 
@@ -249,9 +237,7 @@ public class BookingServiceUnitTest {
 
     @Test
     public void getBookingsByItems() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
-                .thenReturn(List.of(booking));
+        mockUserAndBooking();
 
         List<BookingDto> result = bookingService.getBookingsByItems(1L, BookingCondition.ALL, 0, 10);
 
@@ -265,5 +251,11 @@ public class BookingServiceUnitTest {
         assertThat(expected.getStart(), is(result.getStart()));
         assertThat(expected.getEnd(), is(result.getEnd()));
         assertThat(expected.getBooker().getId(), is(result.getBookerId()));
+    }
+
+    private void mockUserAndBooking() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(bookingRepository.findAllByBookerIdOrderByStartDesc(1L, PageRequest.of(0, 10)))
+                .thenReturn(List.of(booking));
     }
 }

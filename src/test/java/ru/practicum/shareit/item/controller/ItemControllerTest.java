@@ -13,8 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.service.CommentService;
 import ru.practicum.shareit.item.comment.service.impl.CommentServiceImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.service.impl.ItemServiceImpl;
 import ru.practicum.shareit.user.model.User;
 
@@ -33,12 +35,14 @@ import static ru.practicum.shareit.auxilary.RequestWithJson.postJson;
 @AutoConfigureMockMvc
 public class ItemControllerTest {
 
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ItemServiceImpl itemService;
+    private ItemService itemService;
     @MockBean
-    private CommentServiceImpl commentService;
+    private CommentService commentService;
 
     private ItemDto item1;
 
@@ -59,7 +63,7 @@ public class ItemControllerTest {
         when(itemService.getItem(1L, 1L)).thenReturn(item1);
 
         checkItemProp(mockMvc.perform(get("/items/1")
-                        .header("X-Sharer-User-Id", 1)));
+                        .header(USER_ID_HEADER, 1)));
     }
 
     @Test
@@ -67,7 +71,7 @@ public class ItemControllerTest {
         when(itemService.addItem(item1, 1L)).thenReturn(item1);
 
         checkItemProp(mockMvc.perform(postJson("/items", item1)
-                        .header("X-Sharer-User-Id", 1)));
+                        .header(USER_ID_HEADER, 1)));
     }
 
     @Test
@@ -79,7 +83,7 @@ public class ItemControllerTest {
         when(itemService.updateItem(1L, item1, 1L)).thenReturn(item1Updated);
 
         MvcResult result = checkItemProp(mockMvc.perform(patchJson("/items/1", item1)
-                        .header("X-Sharer-User-Id", 1)));
+                        .header(USER_ID_HEADER, 1)));
 
         ItemDto resultItem = new ObjectMapper().readValue(result.getResponse().getContentAsString(), ItemDto.class);
 
@@ -91,7 +95,7 @@ public class ItemControllerTest {
     public void getItemsListTest() throws Exception {
         when(itemService.getItemsList(1L, 0, 10)).thenReturn(List.of(item1));
 
-        checkItemListProp(mockMvc.perform(get("/items").header("X-Sharer-User-Id", 1L)));
+        checkItemListProp(mockMvc.perform(get("/items").header(USER_ID_HEADER, 1L)));
     }
 
     @Test
@@ -100,7 +104,7 @@ public class ItemControllerTest {
 
         checkItemListProp(mockMvc.perform(get("/items/search")
                         .param("text", "item1")
-                .header("X-Sharer-User-Id", 1L)));
+                .header(USER_ID_HEADER, 1L)));
     }
 
     @Test
@@ -111,7 +115,7 @@ public class ItemControllerTest {
 
         when(commentService.add(1L, comment, 1L)).thenReturn(comment);
 
-        mockMvc.perform(postJson("/items/1/comment", comment).header("X-Sharer-User-Id", 1L))
+        mockMvc.perform(postJson("/items/1/comment", comment).header(USER_ID_HEADER, 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.text").isString());
     }

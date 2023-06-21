@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingCondition;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.service.impl.BookingServiceImpl;
 import org.springframework.test.web.servlet.ResultActions;
 import ru.practicum.shareit.item.model.Item;
@@ -33,10 +34,12 @@ import java.time.LocalDateTime;
 @AutoConfigureMockMvc
 public class BookingControllerTest {
 
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private BookingServiceImpl bookingService;
+    private BookingService bookingService;
 
     private BookingDto bookingDto;
     private BookingDto bookingResult;
@@ -77,7 +80,7 @@ public class BookingControllerTest {
         when(bookingService.addBooking(bookingDto, 2L)).thenReturn(bookingResult);
 
         checkBookingProps(mockMvc.perform(postJson("/bookings", bookingDto)
-                .header("X-Sharer-User-Id", 2L)));
+                .header("", 2L)));
     }
 
     @Test
@@ -89,7 +92,7 @@ public class BookingControllerTest {
 
         checkBookingProps(mockMvc.perform(patch("/bookings/1")
                 .param("approved", "True")
-                .header("X-Sharer-User-Id", 1L)));
+                .header(USER_ID_HEADER, 1L)));
     }
 
     @Test
@@ -97,7 +100,7 @@ public class BookingControllerTest {
         when(bookingService.getBooking(1L, 1L)).thenReturn(bookingResult);
 
         checkBookingProps(mockMvc.perform(get("/bookings/1")
-                .header("X-Sharer-User-Id", 1L)));
+                .header(USER_ID_HEADER, 1L)));
     }
 
     @Test
@@ -106,7 +109,7 @@ public class BookingControllerTest {
                 .thenReturn(List.of(bookingResult));
 
         checkBookingListProps(mockMvc.perform(get("/bookings")
-                .header("X-Sharer-User-Id", 1L)));
+                .header(USER_ID_HEADER, 1L)));
     }
 
     @Test
@@ -115,7 +118,7 @@ public class BookingControllerTest {
                 .thenReturn(List.of(bookingResult));
 
         checkBookingListProps(mockMvc.perform(get("/bookings/owner")
-                .header("X-Sharer-User-Id", 1L)));
+                .header(USER_ID_HEADER, 1L)));
     }
 
     private static void checkBookingProps(ResultActions result) throws Exception {

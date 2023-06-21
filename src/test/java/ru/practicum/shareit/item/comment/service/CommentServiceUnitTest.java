@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.shareit.booking.service.ItemBookingService;
 import ru.practicum.shareit.booking.service.impl.ItemBookingServiceImpl;
 import ru.practicum.shareit.exception.ObjectAvailabilityException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.when;
 public class CommentServiceUnitTest {
 
     @Mock
-    private ItemBookingServiceImpl bookingService;
+    private ItemBookingService bookingService;
     @InjectMocks
     private CommentServiceImpl commentService;
 

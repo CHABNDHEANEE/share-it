@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.request.service.impl.ItemRequestServiceImpl;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -28,10 +29,12 @@ import static ru.practicum.shareit.auxilary.RequestWithJson.postJson;
 @AutoConfigureMockMvc
 public class ItemRequestControllerTest {
 
+    private static final String USER_ID_HEADER = "X-Sharer-User-Id";
+
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ItemRequestServiceImpl requestService;
+    private ItemRequestService requestService;
 
     private ItemRequestDto request;
     private ItemRequestDto requestResult;
@@ -56,28 +59,28 @@ public class ItemRequestControllerTest {
         when(requestService.getUserRequests(1L, 10, 0))
                 .thenReturn(List.of(requestResult));
 
-        checkItemListProp(mockMvc.perform(get("/requests").header("X-Sharer-User-Id", 1L)));
+        checkItemListProp(mockMvc.perform(get("/requests").header(USER_ID_HEADER, 1L)));
     }
 
     @Test
     public void addRequestTest() throws Exception {
         when(requestService.addRequest(request, 1L)).thenReturn(requestResult);
 
-        checkItemProp(mockMvc.perform(postJson("/requests", request).header("X-Sharer-User-Id", 1L)));
+        checkItemProp(mockMvc.perform(postJson("/requests", request).header(USER_ID_HEADER, 1L)));
     }
 
     @Test
     public void findAllRequestsTest() throws Exception {
         when(requestService.findAllRequests(0, 10, 1L)).thenReturn(List.of(requestResult));
 
-        checkItemListProp(mockMvc.perform(get("/requests/all").header("X-Sharer-User-Id", 1L)));
+        checkItemListProp(mockMvc.perform(get("/requests/all").header(USER_ID_HEADER, 1L)));
     }
 
     @Test
     public void getRequestById() throws Exception {
         when(requestService.getRequestById(1L, 1L)).thenReturn(requestResult);
 
-        checkItemProp(mockMvc.perform(get("/requests/1").header("X-Sharer-User-Id", 1L)));
+        checkItemProp(mockMvc.perform(get("/requests/1").header(USER_ID_HEADER, 1L)));
     }
 
     private static void checkItemProp(ResultActions request) throws Exception {

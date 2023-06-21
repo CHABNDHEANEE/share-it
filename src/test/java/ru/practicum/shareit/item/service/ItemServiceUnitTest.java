@@ -9,9 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.ItemBooking;
+import ru.practicum.shareit.booking.service.ItemBookingService;
 import ru.practicum.shareit.booking.service.impl.ItemBookingServiceImpl;
 import ru.practicum.shareit.exception.ObjectUpdateException;
 import ru.practicum.shareit.item.comment.dto.CommentDto;
+import ru.practicum.shareit.item.comment.service.CommentService;
 import ru.practicum.shareit.item.comment.service.impl.CommentServiceImpl;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
@@ -32,9 +34,9 @@ import static org.mockito.Mockito.*;
 public class ItemServiceUnitTest {
 
     @Mock
-    private ItemBookingServiceImpl bookingService;
+    private ItemBookingService bookingService;
     @Mock
-    private CommentServiceImpl commentService;
+    private CommentService commentService;
     @Mock
     private ItemRepository itemRepository;
     @InjectMocks

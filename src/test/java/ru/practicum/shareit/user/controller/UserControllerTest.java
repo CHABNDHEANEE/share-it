@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.controller;
 
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private UserServiceImpl userService;
+    private UserService userService;
 
     private UserDto user1;
     private UserDto userResult;
