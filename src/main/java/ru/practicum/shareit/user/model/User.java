@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Entity
 @Table(name = "users", schema = "public", uniqueConstraints = {@UniqueConstraint(columnNames = "email")})
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {

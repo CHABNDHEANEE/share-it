@@ -12,15 +12,13 @@ import java.util.Objects;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
-    @ExceptionHandler(ObjectExistenceException.class)
+    @ExceptionHandler({
+            ObjectExistenceException.class,
+            EntityNotFoundException.class,
+            ObjectAccessException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleObjectExistenceException(final ObjectExistenceException e) {
-        return Map.of("", e.getMessage());
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleEntityNotFoundException(final EntityNotFoundException e) {
+    public Map<String, String> handleObjectExistenceException(final Exception e) {
         return Map.of("", e.getMessage());
     }
 
@@ -33,15 +31,9 @@ public class ControllerExceptionHandler {
         return Map.of("", e.getMessage());
     }
 
-    @ExceptionHandler(ConversionFailedException.class)
+    @ExceptionHandler()
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public Map<String, String> handleConversionFailedException(ConversionFailedException e) {
         return Map.of("error", "Unknown state: " + Objects.requireNonNull(e.getValue()));
-    }
-
-    @ExceptionHandler(ObjectAccessException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleObjectAccessException(final ObjectAccessException e) {
-        return Map.of("", e.getMessage());
     }
 }
