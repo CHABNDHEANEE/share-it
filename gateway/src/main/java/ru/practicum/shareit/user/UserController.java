@@ -18,7 +18,7 @@ public class UserController {
     private final UserClient userClient;
 
     @PostMapping
-    public ResponseEntity<Object> addUser(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDto user) {
         return userClient.addUser(user);
     }
 
