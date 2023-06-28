@@ -18,7 +18,7 @@ public class UserController {
     private final UserClient userClient;
 
     @PostMapping
-    public ResponseEntity<Object> addUser(@RequestBody @Valid UserDto user) {
+    public ResponseEntity<Object> addUser(@Valid @RequestBody UserDto user) {
         return userClient.addUser(user);
     }
 
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @Valid @RequestBody UserDto user) {
+    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody UserDto user) {
         return userClient.updateUser(userId, user);
     }
 
