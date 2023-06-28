@@ -33,7 +33,7 @@ public class RequestController {
 
     @GetMapping("/all")
     public ResponseEntity<Object> findAllRequests(@PagingParam({0, 10}) Paging paging,
-                                                @RequestHeader(USER_ID_HEADER) long userId) {
+                                                  @RequestHeader(USER_ID_HEADER) long userId) {
         return requestClient.findAllRequests(paging, userId);
     }
 
