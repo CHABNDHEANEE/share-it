@@ -108,6 +108,7 @@ public class BookingControllerTest {
                 .thenReturn(List.of(bookingResult));
 
         checkBookingListProps(mockMvc.perform(get("/bookings")
+                        .param("state", "ALL")
                 .header(USER_ID_HEADER, 1L)));
     }
 
