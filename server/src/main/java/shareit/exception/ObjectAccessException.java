@@ -1,7 +1,0 @@
-package shareit.exception;
-
-public class ObjectAccessException extends RuntimeException {
-    public ObjectAccessException(String msg) {
-        super(msg);
-    }
-}
