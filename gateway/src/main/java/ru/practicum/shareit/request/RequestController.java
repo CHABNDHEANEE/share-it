@@ -9,6 +9,8 @@ import ru.practicum.shareit.paging.Paging;
 import ru.practicum.shareit.paging.PagingParam;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/requests")
 @RequiredArgsConstructor
@@ -24,8 +26,8 @@ public class RequestController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addRequest(@RequestBody ItemRequestDto itemRequestDto,
-                                     @RequestHeader(USER_ID_HEADER) long userId) {
+    public ResponseEntity<Object> addRequest(@RequestBody @Valid ItemRequestDto itemRequestDto,
+                                             @RequestHeader(USER_ID_HEADER) long userId) {
         return requestClient.addRequest(itemRequestDto, userId);
     }
 

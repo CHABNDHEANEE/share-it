@@ -11,6 +11,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.paging.Paging;
 import ru.practicum.shareit.paging.PagingParam;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/items")
 @Slf4j
@@ -27,15 +29,15 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addItem(@RequestBody ItemDto item,
+    public ResponseEntity<Object> addItem(@RequestBody @Valid ItemDto item,
                                           @RequestHeader(value = USER_ID_HEADER) Long userId) {
         return itemClient.addItem(item, userId);
     }
 
     @PatchMapping("/{itemId}")
     public ResponseEntity<Object> updateItem(@PathVariable Long itemId,
-                              @RequestBody ItemDto item,
-                              @RequestHeader(value = USER_ID_HEADER) Long userId) {
+                                             @RequestBody @Valid ItemDto item,
+                                             @RequestHeader(value = USER_ID_HEADER) Long userId) {
         return itemClient.updateItem(itemId, item, userId);
     }
 
@@ -54,7 +56,7 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@PathVariable long itemId,
-                                             @RequestBody CommentDto comment,
+                                             @RequestBody @Valid CommentDto comment,
                                              @RequestHeader(value = USER_ID_HEADER) Long userId) {
         return itemClient.addComment(itemId, comment, userId);
     }

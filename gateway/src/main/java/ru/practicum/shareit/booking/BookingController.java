@@ -12,6 +12,8 @@ import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.paging.Paging;
 import ru.practicum.shareit.paging.PagingParam;
 
+import javax.validation.Valid;
+
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -23,7 +25,7 @@ public class BookingController {
 	private final BookingClient bookingClient;
 
 	@PostMapping
-	public ResponseEntity<Object> addBooking(@RequestBody BookingDto booking,
+	public ResponseEntity<Object> addBooking(@RequestBody @Valid BookingDto booking,
 											 @RequestHeader(value = USER_ID_HEADER) long userId) {
 		return bookingClient.addBooking(booking, userId);
 	}

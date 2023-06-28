@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -14,7 +13,6 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Validated
 public class UserController {
     private final UserClient userClient;
 
@@ -29,7 +27,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody UserDto user) {
+    public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody @Valid UserDto user) {
         return userClient.updateUser(userId, user);
     }
 
