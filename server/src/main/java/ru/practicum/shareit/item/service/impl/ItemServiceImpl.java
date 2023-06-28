@@ -21,6 +21,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +61,7 @@ public class ItemServiceImpl implements ItemService {
                     o.setComments(commentService.getAllCommentsByItemId(o.getId()));
                     return ItemMapper.toItemDto(o);
                 })
+                .sorted(Comparator.comparingLong(ItemDto::getId))
                 .collect(Collectors.toList());
     }
 

@@ -37,7 +37,7 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getAllByUser(@RequestParam(defaultValue = "ALL") BookingCondition state,
+    public List<BookingDto> getAllByUser(@RequestParam BookingCondition state,
                                          @RequestHeader(value = USER_ID_HEADER) Long userId,
                                          @RequestParam(defaultValue = "10")int size,
                                          @RequestParam(defaultValue = "0")int from) {

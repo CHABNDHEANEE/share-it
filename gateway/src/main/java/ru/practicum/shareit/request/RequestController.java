@@ -9,9 +9,6 @@ import ru.practicum.shareit.paging.Paging;
 import ru.practicum.shareit.paging.PagingParam;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
-import javax.validation.Valid;
-import java.util.List;
-
 @Controller
 @RequestMapping("/requests")
 @RequiredArgsConstructor

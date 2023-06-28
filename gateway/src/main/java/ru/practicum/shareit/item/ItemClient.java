@@ -45,7 +45,7 @@ public class ItemClient extends BaseClient {
                 "from", paging.getFrom(),
                 "size", paging.getSize()
         );
-        return get("", userId, parameters);
+        return get("?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> searchItem(String text, Long userId, Paging paging) {
@@ -54,7 +54,7 @@ public class ItemClient extends BaseClient {
                 "from", paging.getFrom(),
                 "size", paging.getSize()
         );
-        return get("/search", userId, parameters);
+        return get("/search?text={text}&from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> addComment(long itemId, CommentDto comment, long userId) {

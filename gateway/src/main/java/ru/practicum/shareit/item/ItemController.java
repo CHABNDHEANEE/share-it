@@ -11,9 +11,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.paging.Paging;
 import ru.practicum.shareit.paging.PagingParam;
 
-import javax.validation.Valid;
-import java.util.List;
-
 @Controller
 @RequestMapping("/items")
 @Slf4j

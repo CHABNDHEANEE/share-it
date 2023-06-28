@@ -33,7 +33,7 @@ public class RequestClient extends BaseClient {
                 "size", paging.getSize()
         );
 
-        return get("", userId, parameters);
+        return get("?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> addRequest(ItemRequestDto request, long userId) {
@@ -46,7 +46,7 @@ public class RequestClient extends BaseClient {
                 "size", paging.getSize()
         );
 
-        return get("/all", userId, parameters);
+        return get("/all?from={from}&size={size}", userId, parameters);
     }
 
     public ResponseEntity<Object> getRequestById(long requestId, long userId) {

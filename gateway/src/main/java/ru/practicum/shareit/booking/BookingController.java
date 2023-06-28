@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.paging.Paging;
@@ -46,11 +45,9 @@ public class BookingController {
 
 	@GetMapping
 	public ResponseEntity<Object> getBookingsByUser(@RequestHeader(USER_ID_HEADER) long userId,
-													@RequestParam(name = "state", defaultValue = "all") String stateParam,
+													@RequestParam(defaultValue = "ALL") BookingState state,
 													@PagingParam({0, 10})Paging paging) {
-		BookingState state = BookingState.from(stateParam)
-				.orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
-		log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, paging.getFrom(), paging.getSize());
+
 		return bookingClient.getBookingsByUser(userId, state, paging.getFrom(), paging.getSize());
 	}
 
