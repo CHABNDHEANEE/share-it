@@ -6,7 +6,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.model.BookingCondition;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -18,7 +17,7 @@ public class BookingController {
     private final BookingService service;
 
     @PostMapping
-    public BookingDto addBooking(@RequestBody @Valid BookingDto booking,
+    public BookingDto addBooking(@RequestBody BookingDto booking,
                                  @RequestHeader(value = USER_ID_HEADER) long userId) {
         return service.addBooking(booking, userId);
     }
